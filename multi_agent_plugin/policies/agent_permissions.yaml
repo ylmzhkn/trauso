@@ -1,0 +1,19 @@
+version: 1
+default: deny
+agents:
+  supervisor: [supervise]
+  coordinator: [orchestrate]
+  researcher: [web_research]
+  analyst: [workspace_read]
+  coder: [workspace_read, workspace_write]
+  verifier: [workspace_read, static_review]
+  tester: [test_execution]
+  repair: [workspace_read, workspace_write_scoped]
+constraints:
+  analyst_workspace: read_only
+  verifier_evidence: [immutable_user_prompt, actual_changed_source]
+  verifier_forbidden_evidence: [coder_report, blackboard, agent_messages, execution_logs]
+  coder_forbidden: [internet, tests, builds, runtime_execution, independent_file_discovery]
+  tester_requires_explicit_user_approval: true
+  repair_requires_concrete_error: true
+  repair_scope: affected_files_only
