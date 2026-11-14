@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "trauso-multi-agent-plugin"
-version = "0.1.0"
+version = "0.2.0"
 description = "Locally deployed, policy-governed eight-agent system for Trauso"
 requires-python = ">=3.12"
 dependencies = [
@@ -13,6 +13,8 @@ dependencies = [
   "pydantic>=2.8,<3",
   "pydantic-settings>=2.4,<3",
   "PyYAML>=6,<7",
+  "textual>=0.80,<2",
+  "httpx>=0.27,<1",
 ]
 
 [project.optional-dependencies]
