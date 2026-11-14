@@ -1,0 +1,8 @@
+heartbeat_interval_seconds: 5
+heartbeat_timeout_seconds: 20
+default_task_timeout_seconds: 900
+max_retries: 2
+max_identical_actions: 3
+cyclic_delegation_detection: required
+checkpoint_before_restart: true
+preserve_original_prompt: true
