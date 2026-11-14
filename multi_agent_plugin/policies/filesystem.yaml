@@ -1,0 +1,13 @@
+workspace_root_env: WORKSPACE_ROOT
+default_access: deny
+path_traversal_blocked: true
+symlink_escape_blocked: true
+agents:
+  analyst: read_only
+  verifier: read_only
+  coder: read_write_scoped
+  repair: read_write_affected_files_only
+  coordinator: none
+  researcher: none
+  supervisor: metadata_only
+  tester: read_only_when_authorized
