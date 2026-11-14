@@ -1,9 +1,9 @@
 """In-memory task state machine; replace with durable repository adapter for production."""
-
 from datetime import datetime, timezone
 from uuid import UUID
 
 from .contracts import TaskRecord, TaskStatus
+from .events import event_hub
 
 
 _ALLOWED: dict[TaskStatus, set[TaskStatus]] = {
@@ -33,6 +33,9 @@ class TaskManager:
             raise ValueError("Prompt cannot be empty")
         task = TaskRecord(original_prompt=prompt)
         self._tasks[task.task_id] = task
+        event_hub.publish("task.created", task.task_id, {
+            "status": task.status.value, "updated_at": task.updated_at.isoformat()
+        })
         return task
 
     def get(self, task_id: UUID) -> TaskRecord:
@@ -46,4 +49,11 @@ class TaskManager:
             **changes, "status": status, "updated_at": datetime.now(timezone.utc)
         })
         self._tasks[task_id] = updated
+        event_hub.publish("task.status_changed", task_id, {
+            "status": updated.status.value,
+            "assigned_agent": updated.assigned_agent.value if updated.assigned_agent else None,
+            "updated_at": updated.updated_at.isoformat(),
+            "retry_count": updated.retry_count,
+            "error": updated.error,
+        })
         return updated
