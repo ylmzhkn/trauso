@@ -60,13 +60,13 @@ async def stream_events():
         try:
             # Send recent state changes first, then continue with live events.
             for event in event_hub.snapshot():
-                yield f"data: {json.dumps(event, default=str)}\\n\\n"
+                yield f"data: {json.dumps(event, default=str)}\n\n"
             while True:
                 try:
                     event = await asyncio.to_thread(subscriber.get, True, 15)
-                    yield f"data: {json.dumps(event, default=str)}\\n\\n"
+                    yield f"data: {json.dumps(event, default=str)}\n\n"
                 except Exception:
-                    yield ": keep-alive\\n\\n"
+                    yield ": keep-alive\n\n"
         finally:
             event_hub.unsubscribe(subscriber)
 
