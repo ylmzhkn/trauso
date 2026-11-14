@@ -55,7 +55,7 @@ class LiveTaskApp(App[None]):
                             event = json.loads(line[5:].strip())
                         except json.JSONDecodeError:
                             continue
-                        self.call_from_thread(self._render_event, event)
+                        self._render_event(event)
         except Exception as exc:
             summary.update(f"DISCONNECTED  •  {exc}  •  API: {self.api_url}")
 
@@ -70,7 +70,7 @@ class LiveTaskApp(App[None]):
         events = self.query_one("#events", DataTable)
         events.add_row(short_time, event_type, task_id[:8], details[:180])
         if events.row_count > 250:
-            events.remove_row(events.rows.keys()[0])
+            events.remove_row(next(iter(events.rows)))
 
         if event_type in {"task.created", "task.status_changed"}:
             current = self.latest.setdefault(task_id, {})
