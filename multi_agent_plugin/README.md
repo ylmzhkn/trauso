@@ -7,7 +7,8 @@ Independent eight-agent plugin scaffold. It does not implement or modify Trauso'
 - Typed task/message contracts and task lifecycle state machine.
 - Default-deny capability policy and explicit test-authorization gate.
 - Deterministic heartbeat and repeated-action watchdog primitives.
-- Local FastAPI health, agent-list, and task-submission endpoints.
+- Local FastAPI health, agent-list, task-submission, and Server-Sent Events endpoints.
+- Textual terminal dashboard for live task/event monitoring.
 - Docker configuration for API, PostgreSQL, and NATS.
 
 ## Not yet production-ready
@@ -20,10 +21,14 @@ Requires Python 3.12+.
 cd multi_agent_plugin
 python -m venv .venv
 pip install -e .
-uvicorn multi_agent_plugin.api:app --host 127.0.0.1 --port 8787
+multi-agent serve
+# In a second terminal:
+multi-agent tui
 ```
 
-Endpoints: `GET /health`, `GET /agents`, `POST /tasks`, `GET /tasks/{task_id}`.
+Endpoints: `GET /health`, `GET /agents`, `POST /tasks`, `GET /tasks/{task_id}`, `GET /events`, and live `GET /events/stream`.
+
+See [Live TUI guide](docs/LIVE_TUI.md). The current event hub is in-process and intended for the single-process local MVP; distributed deployments require the NATS transport. The TUI displays only events actually emitted by the runtime. Since agent execution/provider adapters are not yet implemented, it does not yet show fabricated per-agent reasoning or progress.
 
 ## Local infrastructure
 Copy `.env.example` to `.env`, review credentials, then run:
