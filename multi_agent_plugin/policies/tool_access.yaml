@@ -1,0 +1,17 @@
+default: deny
+researcher:
+  allow: [web.search, web.open]
+analyst:
+  allow: [workspace.read, static_analysis]
+coder:
+  allow: [workspace.read, workspace.write]
+  deny: [web.*, terminal.*, test.*, build.*, runtime.*]
+verifier:
+  allow: [workspace.read, static_review]
+  deny: [web.*, terminal.*, test.*, build.*, workspace.write]
+tester:
+  allow: [test.run]
+  requires_user_approval: true
+repair:
+  allow: [workspace.read, workspace.write_scoped]
+  requires_concrete_error: true
